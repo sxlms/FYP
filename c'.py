@@ -89,7 +89,3 @@ for i in graph_df.index:
 
 cols = reachability_df.columns
 reachability = reachability_df[cols].lt(sys.maxsize).sum(axis=1).max  # compare with the h
-
-
-
-
