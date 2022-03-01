@@ -1,0 +1,8 @@
+    Implement
+      1. how to download/define a temporal graph?(package)
+        A: can put some orders of the graph along with the time to indicate the timestamp of the graph
+        package may used: teneto
+        Simple ides: input tuple i,j,t -> i and j are nodes and t is the timestamp
+
+      2. the simple algorithm mentioned (BFS find the reachability)
+
