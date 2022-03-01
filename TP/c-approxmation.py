@@ -44,6 +44,13 @@ for row in delete_span_edge:
     graph_df.drop(graph_df[(graph_df['i'] == row[0]) & (graph_df['j'] == row[1])].index, inplace=True)
 
 # get the subgraph from vi,...vj, with all of its edges
+i = 3
+j = 6
+subgraph_nodes = nodes_name[i:j+1]  # v1,v2,v3
+# subgraph_pd naive way
+subgraph_df = graph_df[(graph_df['i'].isin(subgraph_nodes)) & (graph_df['j'].isin(subgraph_nodes))]
+print(0)
+
 
 
 
