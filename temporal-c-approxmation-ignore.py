@@ -64,10 +64,6 @@ subgraph_nodes = nodes_name[i:j+1]  # v1,v2,v3
 # subgraph_pd naive way
 subgraph_df = graph_df[(graph_df['i'].isin(subgraph_nodes)) & (graph_df['j'].isin(subgraph_nodes))]
 print(0)
-
-
-
-
 # create edge stream
 # undirected_graph_pd = undirected_graph_pd.sort_values(by=['t'])
 graph_df = graph_df.sort_values(by=['t'])

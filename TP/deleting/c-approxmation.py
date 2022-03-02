@@ -12,7 +12,7 @@ def reachability_graph(graph_df, nodes_name):
     data = np.full((len(nodes_name), len(nodes_name)), fill_value=sys.maxsize)
     np.fill_diagonal(data, 0)
     reachability_df = pd.DataFrame(data=data, columns=nodes_name, index=nodes_name)
-    # start the algorithms(advanced)
+    # start the algorithms(advanced version to find the reachability)
     for i in graph_df.index:
         # first for u->v, u,v, t
         u = graph_df['i'][i]

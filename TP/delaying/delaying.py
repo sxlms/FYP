@@ -8,7 +8,6 @@ graph_pd = pd.read_csv('testdata.csv')
 delta = 3
 graph_pd['delta-possible'] = graph_pd['t'] + delta - 1
 # tnet = TemporalNetwork(from_df=graph_pd)
-# def earliest-arrival time
 
 # input nodes length
 n = 5
@@ -21,7 +20,7 @@ for i in range(len(source)):
 # initialize part for delta possible
 earliest_index = np.full(n, fill_value=-1)
 # the output dataframe(for the delta-possible)
-temporal_updates = pd.DataFrame({'t':earliest_time,'index': earliest_index})
+temporal_updates = pd.DataFrame({'t': earliest_time,'index': earliest_index})
 
 
 # define the edge stream
@@ -36,15 +35,12 @@ for i in edge_stream.index:
         break
 print(edge_stream)
 # REt(G,S) is in the temporal updates, update the edge stream
-update_edge = temporal_updates[temporal_updates['t']==t_max]['index']
+update_edge = temporal_updates[temporal_updates['t'] == t_max]['index']
 for index, value in update_edge.items():
-    if edge_stream['t'][value]<=edge_stream['delta-possible'][value]:
-        edge_stream['t'][value]+=1
+    if edge_stream['t'][value] <= edge_stream['delta-possible'][value]:
+        edge_stream['t'][value] += 1
 
 print(edge_stream)
-
-x =1
-
 
 
 
