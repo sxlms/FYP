@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import sys
-# from teneto import TemporalNetwork
+
 
 graph_pd = pd.read_csv('testdata.csv')
 # add the graph_pd the delta-possible, Algorithm for dalta-delaying, if t<=possible, t+1-> delta-possible
