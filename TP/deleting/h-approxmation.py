@@ -57,9 +57,3 @@ while len(temporal_graph_nodes):
             for index, v in enumerate(value):
                 data[v[0]][v[1]] = sys.maxsize
                 data[v[1]][v[0]] = sys.maxsize
-
-
-
-
-
-
