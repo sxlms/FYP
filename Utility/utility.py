@@ -31,6 +31,33 @@ class Algorithm:
         return r
 
     @staticmethod
+    def subgraph(layout, start, end, graph_df):
+        # output the dataframe of subgraph
+        subgraph_nodes = layout[start:end+1]
+        nodes_set = set(subgraph_nodes)
+        output_list = []
+        for index in graph_df.index:
+            if graph_df['i'][index] in nodes_set and graph_df['j'][index] in nodes_set:
+                output_list.append((graph_df['i'][index], graph_df['j'][index], graph_df['t'][index]))
+        output_df = pd.DataFrame(data=output_list, columns=['i', 'j', 't'])
+        return output_df
+
+    @staticmethod
+    def span(layout, end, graph_df):
+        subgraph_nodes = layout[0:end + 1]
+        nodes_set = set(subgraph_nodes)
+        output_list = []
+        update_df = graph_df.copy()
+        for index in graph_df.index:
+            if (graph_df['i'][index] in nodes_set and graph_df['j'][index] not in nodes_set) or \
+               (graph_df['j'][index] in nodes_set and graph_df['i'][index] not in nodes_set):
+                output_list.append((graph_df['i'][index], graph_df['j'][index]))
+        for values in output_list:
+            update_df.drop(update_df[(update_df.i == values[0]) &
+                                     (update_df.j == values[1])].index, inplace=True)
+        return output_list, update_df
+
+    @staticmethod
     def dijkstra_subtree(graph_df, h):
         """
         :param graph_df: the temporal graph
