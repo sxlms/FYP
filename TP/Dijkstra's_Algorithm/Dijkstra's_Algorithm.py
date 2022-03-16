@@ -25,7 +25,8 @@ for i in graph_df.index:
 
 # Output: Subtree of vertex with reachability is h + 1, if exist
 deleted_subtree = dict()
-break_f=0
+break_f = 0
+subtree_root = 'v-1'
 for root in nodes_name:
     # it will iterate each node to find an node that reachability of subtree rooted at is h+1
     max_reachability = 1  # Every vertex can reach itself. Record the current maximum number
@@ -42,8 +43,12 @@ for root in nodes_name:
     tem_timestamp = -1
     tem_length = 0
     break_w = 0
+    candidate = set()
+    candidate.add(root)
+    current_root = root.copy()
 
-    while len(unvisited_nodes) >= 0:
+    while len(candidate):
+        candidate.remove(root)
         for i in edge_df[root].index:
             # find the root's neighbor and update the len_df and edge_df
             if i != root and edge_df[root][i] != sys.maxsize and edge_df[root][i] > tem_timestamp:
@@ -51,47 +56,49 @@ for root in nodes_name:
                 # update the time_df and len_df
                 change_flag = 0  # indicate if it needs update the subtree
                 if time_df[i][0] > edge_df[root][i]:
+                    # reachability +1 only when the node
+                    if time_df[i][0] == sys.maxsize:
+                        max_reachability += 1
+                        candidate.add(i)
                     time_df[i][0] = edge_df[root][i]
                     len_df[i][0] = tem_length + 1
-                    max_reachability += 1
                     change_flag = 1
                 elif (time_df[i][0] == edge_df[root][i]) and (len_df[i][0] > tem_length + 1):
                     len_df[i][0] = tem_length + 1
                     change_flag = 1
                 # update the subtree
-                if change_flag ==1:
+                if change_flag == 1:
                     path_to_node = []
                     if i in current_subtree_edges:
                         path_to_node = current_subtree_edges.get(i)
                     path_to_node.append((root, i))
                     current_subtree_edges.update({i: path_to_node})
-                # check the reachability
+                # check the reachability for each index
                 if max_reachability == h+1:
                     break_w = 1
                     break
-
         if break_w == 1:
             break_f = 1
             break
-
-        # select the next nodes
         tem_timestamp = sys.maxsize
-        for index, row in time_df.iteritems():
-            if (index in unvisited_nodes) and row[0] < tem_timestamp:
-                root = index
-                tem_timestamp = time_df[index][0]
-                tem_length = len_df[index][0]
-        # Delete it from unvisited nodes
-        unvisited_nodes.remove(root)
-    if break_f ==1:
+        for n in candidate:
+            if tem_timestamp > time_df[n][0]:
+                root = i
+                tem_timestamp = time_df[n][0]
+                tem_length=len_df[n][0]
+
+
+    if break_f == 1:
         deleted_subtree = current_subtree_edges
+        subtree_root = current_root
         break
+
 
 # Final output
 if break_f == 1:
     print("there such exist subtree and deleted Subtree is:")
-
-
+    for value in deleted_subtree.values():
+        print(value[0])
 else:
     print("No such subtree")
 
