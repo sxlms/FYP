@@ -26,7 +26,7 @@ for i in graph_df.index:
 # Output: Subtree of vertex with reachability is h + 1, if exist
 deleted_subtree = dict()
 break_f = 0
-subtree_root = 'v-1'
+deleted_root = 'not defined'
 for root in nodes_name:
     # it will iterate each node to find an node that reachability of subtree rooted at is h+1
     max_reachability = 1  # Every vertex can reach itself. Record the current maximum number
@@ -45,13 +45,13 @@ for root in nodes_name:
     break_w = 0
     candidate = set()
     candidate.add(root)
-    current_root = root.copy()
+    root_of_subtree = root
 
     while len(candidate):
         candidate.remove(root)
         for i in edge_df[root].index:
             # find the root's neighbor and update the len_df and edge_df
-            if i != root and edge_df[root][i] != sys.maxsize and edge_df[root][i] > tem_timestamp:
+            if i != root_of_subtree and i != root and edge_df[root][i] != sys.maxsize and edge_df[root][i] > tem_timestamp:
                 # this is the reachable neighbor of root
                 # update the time_df and len_df
                 change_flag = 0  # indicate if it needs update the subtree
@@ -83,14 +83,12 @@ for root in nodes_name:
         tem_timestamp = sys.maxsize
         for n in candidate:
             if tem_timestamp > time_df[n][0]:
-                root = i
+                root = n
                 tem_timestamp = time_df[n][0]
-                tem_length=len_df[n][0]
-
-
+                tem_length = len_df[n][0]
     if break_f == 1:
         deleted_subtree = current_subtree_edges
-        subtree_root = current_root
+        deleted_root = root_of_subtree
         break
 
 
