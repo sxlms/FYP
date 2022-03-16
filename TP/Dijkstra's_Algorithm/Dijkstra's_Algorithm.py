@@ -94,7 +94,7 @@ for root in nodes_name:
 
 # Final output
 if break_f == 1:
-    print("there such exist subtree and deleted Subtree is:")
+    print("deleted Subtree is rooted at:"+deleted_root)
     for value in deleted_subtree.values():
         print(value[0])
 else:
