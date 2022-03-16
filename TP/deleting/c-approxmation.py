@@ -67,20 +67,3 @@ while reachability_graph(graph_df, nodes_name) > h:
     graph_df, output = update_graph(graph_df, j, nodes_name, output)
     i = j+1
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
