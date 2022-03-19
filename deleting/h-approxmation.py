@@ -1,11 +1,11 @@
 import pandas as pd
-
-# Import the data.csv into dataframe
 from Utility.utility import Algorithm
 
+# Import the data.csv into dataframe
 graph_df = pd.read_csv('data.csv')
 h = 4
-
+# Draw Graph before h-approximation
+Algorithm.draw_graph(graph_df, "temporal_graph_h_approximation")
 reachability = Algorithm.check_reachability(graph_df)
 output_edge = []
 while reachability > h:
@@ -19,8 +19,8 @@ while reachability > h:
     reachability = Algorithm.check_reachability(graph_df)
 
 if len(output_edge) > 0:
-    print("delete edges are:")
-    for values in output_edge:
-        print(values)
+    deleted_edge_df = pd.DataFrame(data=output_edge, columns=['i', 'j', 't'])
+    Algorithm.draw_graph(deleted_edge_df, "deleted_edges_h_approximation")
+    Algorithm.draw_graph(graph_df, "after_deletion_h_approximation")
 else:
-    print("the reachability of graph is at most h")
+    print("The maximum reachability of temporal graph is already h")

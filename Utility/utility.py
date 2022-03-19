@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
 import sys
+from graphviz import Graph
+from pathlib import Path
+import os
 
 
 class Algorithm:
@@ -43,15 +46,14 @@ class Algorithm:
         return output_df
 
     @staticmethod
-    def span(layout, end, graph_df):
+    def span(layout, end, graph_df, output_list):
         subgraph_nodes = layout[0:end + 1]
         nodes_set = set(subgraph_nodes)
-        output_list = []
         update_df = graph_df.copy()
         for index in graph_df.index:
             if (graph_df['i'][index] in nodes_set and graph_df['j'][index] not in nodes_set) or \
                (graph_df['j'][index] in nodes_set and graph_df['i'][index] not in nodes_set):
-                output_list.append((graph_df['i'][index], graph_df['j'][index]))
+                output_list.append((graph_df['i'][index], graph_df['j'][index], graph_df['t'][index]))
         for values in output_list:
             update_df.drop(update_df[(update_df.i == values[0]) &
                                      (update_df.j == values[1])].index, inplace=True)
@@ -127,7 +129,7 @@ class Algorithm:
                             path_to_node = []
                             if i in current_subtree_edges:
                                 path_to_node = current_subtree_edges.get(i)
-                            path_to_node.append((root, i))
+                            path_to_node.append((root, i, edge_df[root][i]))
                             current_subtree_edges.update({i: path_to_node})
                         # check the reachability for each index
                         if reachability == h + 1:
@@ -145,5 +147,22 @@ class Algorithm:
             if break_f == 1:
                 deleted_subtree = current_subtree_edges
                 break
-
         return deleted_subtree
+
+    @staticmethod
+    def draw_graph(df, file_path):
+        temporal_graph = Graph(format='jpeg')
+        temporal_graph.attr('node', shape='circle')
+        nodelist = []
+        for idx, row in df.iterrows():
+            node1, node2, time = [str(i) for i in row]
+            if node1 not in nodelist:
+                temporal_graph.node(node1)
+                nodelist.append(node2)
+            if node2 not in nodelist:
+                temporal_graph.node(node2)
+                nodelist.append(node2)
+
+            temporal_graph.edge(node1, node2, label=time)
+
+        temporal_graph.render(str(file_path))

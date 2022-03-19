@@ -1,12 +1,12 @@
-import numpy as np
 import pandas as pd
-import sys
 from Utility.utility import Algorithm
 
 # prepare G and layout of the G :
 start = 0
 nodes_layout = ['vr', 'v1', 'v2', 'v3', 'v4', 'v5']
 graph_df = pd.read_csv('data.csv')
+# Draw temporal graph
+Algorithm.draw_graph(graph_df, "temporal_graph_c_approximation")
 h = 4
 nodes_number = len(nodes_layout)
 j = -1
@@ -21,12 +21,13 @@ while Algorithm.check_reachability(graph_df) > h:
             j = index
             break
     # span vj and vj+1 added into set and update the graph
-    output,graph_df = Algorithm.span(nodes_layout, j, graph_df)
-    output_edge.append(output)
+    output_edge, graph_df = Algorithm.span(nodes_layout, j, graph_df, output_edge)
     start = j+1
 
-if len(output_edge)>0:
-    print("delete edges are:")
-    for v in output_edge:
-        print(v)
+if len(output_edge) > 0:
+    deleted_edge_df = pd.DataFrame(data=output_edge, columns=['i', 'j', 't'])
+    Algorithm.draw_graph(deleted_edge_df, "deleted_edges_c_approximation")
+    Algorithm.draw_graph(graph_df, "after_deletion_c_approximation")
+else:
+    print("The maximum reachability of temporal graph is already h")
 

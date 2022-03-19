@@ -1,20 +1,22 @@
 import numpy as np
 import pandas as pd
 import sys
+from Utility.utility import Algorithm
 
+graph_df = pd.read_csv('data.csv')
 
-graph_df = pd.read_csv('testdata.csv')
-# add the graph_pd the delta-possible, Algorithm for dalta-delaying, if t<=possible, t+1-> delta-possible
+# Draw temporal graph
+Algorithm.draw_graph(graph_df, "temporal_graph_delaying")
 delta = 3
+# Add one extra column delta-possible. If t<=possible, t+1 is delta-possible
 graph_df['delta-possible'] = graph_df['t'] + delta - 1
 
-# input nodes length
+# Input nodes
 nodes_name = list(set(graph_df['i']).union(graph_df['j']))
-nodes_set = set(nodes_name)
 nodes_number = len(nodes_name)
 source = [1]
 t_max = 1
-# initialize part
+# Initialization
 earliest_time = np.full(nodes_number, fill_value=sys.maxsize)
 for i in range(len(source)):
     earliest_time[source[i]] = 0
@@ -28,8 +30,8 @@ temporal_updates = pd.DataFrame({'t': earliest_time, 'index': earliest_index})
 edge_stream = graph_df.sort_values(by='t')
 # start
 for i in edge_stream.index:
-    if (edge_stream['t'][i] <= t_max and edge_stream['t'][i] >= earliest_time[edge_stream['i'][i]]):
-        if edge_stream['t'][i]< earliest_time[edge_stream['j'][i]]:
+    if edge_stream['t'][i] <= t_max and edge_stream['t'][i] >= earliest_time[edge_stream['i'][i]]:
+        if edge_stream['t'][i] < earliest_time[edge_stream['j'][i]]:
             temporal_updates['t'][edge_stream['j'][i]] = edge_stream['t'][i]
             temporal_updates['index'][edge_stream['j'][i]] = i
     elif (edge_stream['t'][i] > t_max):
