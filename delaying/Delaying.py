@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import sys
-from Utility.utility import Algorithm
+from utility.Utility import Algorithm
 
 graph_df = pd.read_csv('data.csv')
 

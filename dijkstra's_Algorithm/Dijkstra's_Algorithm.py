@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import sys
-from Utility.utility import Algorithm
+from utility.Utility import Algorithm
 
 """ This algorithm is not optimal for the minimum edge set of a subtree with the reachability h rooted at v
     But, it can ensure that if there is a subtree with the reachability h rooted at v. The program will output that.

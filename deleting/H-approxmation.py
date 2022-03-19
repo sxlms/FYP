@@ -1,5 +1,5 @@
 import pandas as pd
-from Utility.utility import Algorithm
+from utility.Utility import Algorithm
 
 # Import the data.csv into dataframe
 graph_df = pd.read_csv('data.csv')

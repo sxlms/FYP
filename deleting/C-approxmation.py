@@ -1,5 +1,5 @@
 import pandas as pd
-from Utility.utility import Algorithm
+from utility.Utility import Algorithm
 
 # prepare G and layout of the G :
 start = 0
