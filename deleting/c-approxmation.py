@@ -12,9 +12,9 @@ nodes_number = len(nodes_layout)
 j = -1
 # output delete edge
 output_edge = []
+reachability, time_df = Algorithm.check_reachability(graph_df)
 
-
-while Algorithm.check_reachability(graph_df) > h:
+while reachability > h:
     for index in range(nodes_number-1, start, -1):
         subgraph_df = Algorithm.subgraph(nodes_layout, start, index, graph_df)
         if Algorithm.check_reachability(subgraph_df) <= h:
@@ -23,6 +23,7 @@ while Algorithm.check_reachability(graph_df) > h:
     # span vj and vj+1 added into set and update the graph
     output_edge, graph_df = Algorithm.span(nodes_layout, j, graph_df, output_edge)
     start = j+1
+    reachability, time_df = Algorithm.check_reachability(graph_df)
 
 if len(output_edge) > 0:
     deleted_edge_df = pd.DataFrame(data=output_edge, columns=['i', 'j', 't'])

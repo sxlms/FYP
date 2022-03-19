@@ -16,7 +16,7 @@ class Algorithm:
         graph_df = graph_df.sort_values(by=['t'])
         # The  earliest_arrival  matrix is nXn matrix. Each cell record the earliest arrival time between two nodes
         earliest_arrival_matrix = np.full((len(nodes_name), len(nodes_name)), fill_value=sys.maxsize)
-        np.fill_diagonal(earliest_arrival_matrix, 0)  # Initialize every vertex reach itself at timestamp 0
+        np.fill_diagonal(earliest_arrival_matrix, -1)  # Initialize every vertex reach itself at timestamp 0
         earliest_arrival_df = pd.DataFrame(data=earliest_arrival_matrix, columns=nodes_name, index=nodes_name)
         for i in graph_df.index:
             u = graph_df['i'][i]
@@ -31,7 +31,7 @@ class Algorithm:
 
         cols = earliest_arrival_df.columns
         r = earliest_arrival_df[cols].lt(sys.maxsize).sum(axis=1).max()
-        return r
+        return r, earliest_arrival_df
 
     @staticmethod
     def subgraph(layout, start, end, graph_df):
@@ -166,3 +166,5 @@ class Algorithm:
             temporal_graph.edge(node1, node2, label=time)
 
         temporal_graph.render(str(file_path))
+
+
