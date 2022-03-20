@@ -99,7 +99,7 @@ deleted_tree_list = list()
 if break_f == 1:
     for value in deleted_subtree.values():
         deleted_tree_list.append(value[0])
-    deleted_edge_df = pd.DataFrame(data=deleted_tree_list,columns=['i', 'j', 't'])
+    deleted_edge_df = pd.DataFrame(data=deleted_tree_list, columns=['i', 'j', 't'])
     Algorithm.draw_graph(deleted_edge_df, "deleted_subtree")
 else:
     print("No such subtree")
