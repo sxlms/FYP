@@ -20,22 +20,13 @@ source_nodes = ['vr']
 t_max = graph_df['t'].max()+delta
 t_min = graph_df['t'].min()
 
-def timestamp_matrix(graph_df):
-    edge_df = pd.DataFrame(data=np.full((len(nodes_name), len(nodes_name)), fill_value=sys.maxsize),
-                           columns=nodes_name,
-                           index=nodes_name)
-    for i in graph_df.index:
-        edge_df[graph_df['i'][i]][graph_df['j'][i]] = graph_df['t'][i]
-        edge_df[graph_df['j'][i]][graph_df['i'][i]] = graph_df['t'][i]
-    return edge_df
-
 
 def reachable_edge_t(df, source, t):
     delaying_edge_list = []
-    reachability, time_df = Algorithm.check_reachability(df)
+    reachability, time_df = Algorithm.find_reachability(df)
     time_df = time_df[time_df.index.isin(source)]
     time_df.drop(axis=1, labels=source, inplace=True)
-    edge_df = timestamp_matrix(df)
+    edge_df = Algorithm.temporal_graph_matrix(df)
     for index, row in time_df.iteritems():
         if time_df[index].min() == t:
             match_sources = edge_df[edge_df[index] == t].index.tolist()

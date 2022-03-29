@@ -8,7 +8,7 @@ import os
 
 class Algorithm:
     @staticmethod
-    def check_reachability(graph_df):
+    def find_reachability(graph_df):
         # return the reachability of the graph
         # Get the list of nodes name
         nodes_name = list(set(graph_df['i']).union(graph_df['j']))
@@ -167,4 +167,13 @@ class Algorithm:
 
         temporal_graph.render(str(file_path))
 
-
+    @staticmethod
+    def temporal_graph_matrix(df):
+        nodes_name = list(set(df['i']).union(df['j']))
+        graph_matrix = pd.DataFrame(data=np.full((len(nodes_name), len(nodes_name)), fill_value=sys.maxsize),
+                                    columns=nodes_name,
+                                    index=nodes_name)
+        for i in df.index:
+            graph_matrix[df['i'][i]][df['j'][i]] = df['t'][i]
+            graph_matrix[df['j'][i]][df['i'][i]] = df['t'][i]
+        return graph_matrix
