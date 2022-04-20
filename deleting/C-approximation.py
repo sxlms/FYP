@@ -3,7 +3,7 @@ from utility.Utility import Algorithm
 
 # prepare G and layout of the G :
 start = 0
-nodes_layout = ['v1', 'vr', 'v3', 'v5', 'v4', 'v2']
+nodes_layout = ['v1', 'vr','v3','v5', 'v4', 'v2']
 graph_df = pd.read_csv('data.csv')
 # Draw temporal graph
 Algorithm.draw_graph(graph_df, "temporal_graph_c")
