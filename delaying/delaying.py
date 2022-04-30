@@ -9,7 +9,7 @@ from utility.utility import Algorithm
 
     Output: 
             1. the diagram of input temporal graph. File name: temporal_graph
-            2. the diagram of temporal graph after running this algorithm. File name: updated_graph.csv
+            2. the diagram of temporal graph after running this algorithm. File name: updated_graph
             3. .csv recorded the edge stream of updated_graph. File name: updated_graph.csv
             4. two DOT text file record the graph nodes and edges
 """

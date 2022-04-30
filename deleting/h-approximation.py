@@ -1,6 +1,5 @@
 import pandas as pd
 from utility.utility import Algorithm
-import timeit
 
 """ This algorithm minimize the reachability by h-approximation algorithm
 
@@ -9,22 +8,26 @@ import timeit
 
     Output: 
             1. the diagram of input temporal graph. File name: temporal_graph
-            2. the diagram of temporal graph after running this algorithm. File name: updated_graph.csv
-            3. the diagram of deleted subtree. File name: 
-            3. .csv recorded the edge stream of updated_graph. File name: updated_graph.csv
-            4. three DOT text file record the graph nodes and edges
+            2. the diagram of temporal graph after running this algorithm. File name: h_updated_graph
+            3. the diagram of all deleted subtrees. File name: deleted_subtrees
+            4. .csv recorded the edge stream of updated_graph. File name: h_updated_graph.csv
+            5. three DOT text file record the graph nodes and edges
+                6.  if the maximum reachability of temporal graph is h before any operation, 
+                    it will output "The maximum reachability of original temporal graph is h"
 """
 
-start = timeit.default_timer()
 h = 4
 EDGE_STREAM_PATH = '../data/data.csv'
+
 # Import the temporal graph into dataframe
 graph_df = pd.read_csv(EDGE_STREAM_PATH)
 
 # Draw Graph before h-approximation
 Algorithm.draw_graph(graph_df, "temporal_graph_h")
+
 reachability, time_df = Algorithm.find_reachability(graph_df)
 output_edge = []
+
 while reachability > h:
     edge_set_dict = Algorithm.dijkstra_subtree(graph_df, h)
     for values in edge_set_dict.values():
@@ -37,9 +40,8 @@ while reachability > h:
 
 if len(output_edge) > 0:
     deleted_edge_df = pd.DataFrame(data=output_edge, columns=['i', 'j', 't'])
-    Algorithm.draw_graph(deleted_edge_df, "deleted_edges_h_approximation")
-    Algorithm.draw_graph(graph_df, "after_deletion_h_approximation")
+    Algorithm.draw_graph(deleted_edge_df, "deleted_subtrees")
+    Algorithm.draw_graph(graph_df, "h_updated_graph")
+    graph_df.to_csv("h_updated_graph.csv", index=False)
 else:
-    print("The maximum reachability of temporal graph is already h")
-stop = timeit.default_timer()
-print('Time: ', stop - start)
+    print("The maximum reachability of original temporal graph is h")
