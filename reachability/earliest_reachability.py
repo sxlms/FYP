@@ -3,6 +3,11 @@ import pandas as pd
 import sys
 import timeit
 start = timeit.default_timer()
+"""
+ This program is used for finding the reachability of each vertex in temporal graph.
+ Input: The edge stream of a temporal graph. Variable: EDGE_STREAM_PATH
+ Output: Dataframe recorded the reachability of each vertex. Variable: reachability_df
+"""
 EDGE_STREAM_PATH = '../data/data.csv'
 # Import the temporal graph into dataframe
 graph_df = pd.read_csv(EDGE_STREAM_PATH)
@@ -14,22 +19,21 @@ nodes_name = list(set(graph_df['i']).union(graph_df['j']))
 graph_df = graph_df.sort_values(by=['t'])
 
 # Initialize the earliest_arrival matrix and convert it into dataframe
-# Suppose the temporal graph has n vertexes.
-# The  earliest_arrival  matrix is nXn matrix. Each cell record the earliest arrival time between two nodes
+# Suppose the temporal graph has n vertices, the earliest_arrival dataframe is a n*n matrix.
+# Each cell record the earliest arrival time from row to column
+
 earliest_arrival_matrix = np.full((len(nodes_name), len(nodes_name)), fill_value=sys.maxsize)
 np.fill_diagonal(earliest_arrival_matrix, 0)  # Initialize every vertex reach itself at timestamp 0
 earliest_arrival_df = pd.DataFrame(data=earliest_arrival_matrix, columns=nodes_name, index=nodes_name)
 
 for i in graph_df.index:
-    """ This is Algorithm used to find the earliest time from s to a vertex v. 
- 
-    The edge coming as edge stream. The edge labelled as smaller timestamp come first.
-    For each coming edge (u,v,t), 
-    Column named u and v of matrix record the current earliest arrival time from each node to u and v.
-    for each row, if matrix[node][u] < t, which means node can reach v via u, 
-                     and matrix[node][v] < t, which means the earliest arrival time from node to v is t. 
-                     Update the matrix[node][v] = t.
-    For undirected graph, edge (u,v,t) also means (v,u,t). Therefore, it needs the similarly operation.
+    """ This is used to find the earliest time from s to a vertex v. 
+    For each coming edge (u,v,t) in edge stream, 
+    columns named u and v of matrix record the current earliest arrival time from row vertex to u and v.
+    for each row, if matrix[vertex][u] < t, which means vertex can reach v via u, 
+                  then, check matrix[vertex][v] < t, which means the current earliest arrival time from vertex to v is t
+                        Update it with matrix[vertex][v] = t.
+    For undirected temporal graph, edge (u,v,t) also means (v,u,t). Therefore, it needs the similar operation.
     """
 
     u = graph_df['i'][i]

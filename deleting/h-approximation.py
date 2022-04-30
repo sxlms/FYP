@@ -2,12 +2,25 @@ import pandas as pd
 from utility.utility import Algorithm
 import timeit
 
-start = timeit.default_timer()
+""" This algorithm minimize the reachability by h-approximation algorithm
 
+    Input:  1. The edge stream of a temporal graph. Variable: EDGE_STREAM_PATH
+            2. The h parameter. Variable: h
+
+    Output: 
+            1. the diagram of input temporal graph. File name: temporal_graph
+            2. the diagram of temporal graph after running this algorithm. File name: updated_graph.csv
+            3. the diagram of deleted subtree. File name: 
+            3. .csv recorded the edge stream of updated_graph. File name: updated_graph.csv
+            4. three DOT text file record the graph nodes and edges
+"""
+
+start = timeit.default_timer()
+h = 4
 EDGE_STREAM_PATH = '../data/data.csv'
 # Import the temporal graph into dataframe
 graph_df = pd.read_csv(EDGE_STREAM_PATH)
-h = 3
+
 # Draw Graph before h-approximation
 Algorithm.draw_graph(graph_df, "temporal_graph_h")
 reachability, time_df = Algorithm.find_reachability(graph_df)
