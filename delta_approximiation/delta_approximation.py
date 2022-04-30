@@ -1,9 +1,14 @@
 import pandas as pd
-from utility.Utility import Algorithm
+from utility.utility import Algorithm
 import sys
-# Import the data.csv into dataframe
-graph_df = pd.read_csv('data.csv')
-h = 4
+import timeit
+
+EDGE_STREAM_PATH = '../data/data.csv'
+# Import the temporal graph into dataframe
+graph_df = pd.read_csv(EDGE_STREAM_PATH)
+
+start = timeit.default_timer()
+h = 3
 # Draw Graph before h-approximation
 Algorithm.draw_graph(graph_df, "temporal_graph_delta_approximation")
 reachability, time_df = Algorithm.find_reachability(graph_df)
@@ -42,3 +47,5 @@ if len(output_edge) > 0:
     Algorithm.draw_graph(graph_df, "after_deletion_delta_approximation")
 else:
     print("The maximum reachability of temporal graph is already h")
+stop = timeit.default_timer()
+print('Time: ', stop - start)

@@ -1,13 +1,17 @@
-import numpy as np
 import pandas as pd
-import sys
-from utility.Utility import Algorithm
+import timeit
+from utility.utility import Algorithm
 
-graph_df = pd.read_csv('data.csv')
+EDGE_STREAM_PATH = '../data/data.csv'
+# Import the temporal graph into dataframe
+graph_df = pd.read_csv(EDGE_STREAM_PATH)
+# Source nodes
+source_nodes = ['v5', 'vr']
 
+start = timeit.default_timer()
 # Draw temporal graph
 Algorithm.draw_graph(graph_df, "temporal_graph_delaying")
-delta = 2
+delta = 3
 # Add one extra column delta-possible. This is the upper bound of timestamp allowing any delaying
 graph_df['delta-possible'] = graph_df['t'] + delta - 1
 # Define the edge stream
@@ -15,8 +19,7 @@ edge_stream_df = graph_df.sort_values(by='t')
 # Get the nodes name
 nodes_name = list(set(graph_df['i']).union(graph_df['j']))
 nodes_number = len(nodes_name)
-# Source nodes
-source_nodes = ['vr']
+
 t_max = graph_df['t'].max()+delta
 t_min = graph_df['t'].min()
 
@@ -53,3 +56,5 @@ for time in range(t_min, t_max):
 # Draw temporal graph after delaying
 graph_df.drop(columns=['delta-possible'], inplace=True)
 Algorithm.draw_graph(graph_df, "temporal_graph_after_delaying")
+stop = timeit.default_timer()
+print('Time: ', stop - start)

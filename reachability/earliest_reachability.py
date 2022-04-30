@@ -1,9 +1,11 @@
 import numpy as np
 import pandas as pd
 import sys
-
-# Import the data.csv into dataframe
-graph_df = pd.read_csv('data.csv')
+import timeit
+start = timeit.default_timer()
+EDGE_STREAM_PATH = '../data/data.csv'
+# Import the temporal graph into dataframe
+graph_df = pd.read_csv(EDGE_STREAM_PATH)
 
 # Get the list of nodes name. This list can be used as the indexes of the dataframe to show the reachability clearly
 nodes_name = list(set(graph_df['i']).union(graph_df['j']))
@@ -45,3 +47,5 @@ reachability_df.columns = ['reachability']
 
 print("OUTPUT:the reachability of each vertex\n")
 print(reachability_df)
+stop = timeit.default_timer()
+print("Time", stop-start)

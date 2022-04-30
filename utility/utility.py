@@ -2,8 +2,6 @@ import numpy as np
 import pandas as pd
 import sys
 from graphviz import Graph
-from pathlib import Path
-import os
 
 
 class Algorithm:

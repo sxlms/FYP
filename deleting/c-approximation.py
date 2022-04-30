@@ -1,13 +1,18 @@
 import pandas as pd
-from utility.Utility import Algorithm
+from utility.utility import Algorithm
+import timeit
 
+EDGE_STREAM_PATH = '../data/data.csv'
+s = timeit.default_timer()
+
+# Import the temporal graph into dataframe
+graph_df = pd.read_csv(EDGE_STREAM_PATH)
 # prepare G and layout of the G :
 start = 0
-nodes_layout = ['v1', 'vr','v3','v5', 'v4', 'v2']
-graph_df = pd.read_csv('data.csv')
+nodes_layout = ['vr','v1','v2','v3','v4','v5']
 # Draw temporal graph
 Algorithm.draw_graph(graph_df, "temporal_graph_c")
-h = 4
+h = 3
 nodes_number = len(nodes_layout)
 j = -1
 # output delete edge
@@ -33,3 +38,5 @@ if len(output_edge) > 0:
 else:
     print("The maximum reachability of temporal graph is already h")
 
+st = timeit.default_timer()
+print('Time: ', s - st)
