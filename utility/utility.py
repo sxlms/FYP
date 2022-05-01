@@ -86,16 +86,11 @@ class Algorithm:
             unvisited_nodes.remove(root)
             current_subtree_edges = dict()  # record the subtree edges of current node(root)
 
-            # record length of the shortest temporal path from root to each nodes
-            len_df = pd.DataFrame(
-                data=np.full(len(unvisited_nodes), fill_value=sys.maxsize).reshape(1, nodes_number - 1),
-                columns=list(unvisited_nodes))
             # record the earliest timestamp from root to each nodes
             time_df = pd.DataFrame(
                 data=np.full(len(unvisited_nodes), fill_value=sys.maxsize).reshape(1, nodes_number - 1),
                 columns=list(unvisited_nodes))
             tem_timestamp = -1
-            tem_length = 0
             break_w = 0
             candidate = set()
             candidate.add(root)
@@ -110,25 +105,19 @@ class Algorithm:
                             edge_df[root][i] > tem_timestamp:
                         # this is the reachable neighbor of root
                         # update the time_df and len_df
-                        change_flag = 0  # indicate if it needs update the subtree
                         if time_df[i][0] > edge_df[root][i]:
                             # reachability +1 only when the node
                             if time_df[i][0] == sys.maxsize:
                                 reachability += 1
                                 candidate.add(i)
                             time_df[i][0] = edge_df[root][i]
-                            len_df[i][0] = tem_length + 1
-                            change_flag = 1
-                        elif (time_df[i][0] == edge_df[root][i]) and (len_df[i][0] > tem_length + 1):
-                            len_df[i][0] = tem_length + 1
-                            change_flag = 1
-                        # update the subtree
-                        if change_flag == 1:
+                            # update the subtree
                             path_to_node = []
                             if i in current_subtree_edges:
                                 path_to_node = current_subtree_edges.get(i)
                             path_to_node.append((root, i, edge_df[root][i]))
                             current_subtree_edges.update({i: path_to_node})
+
                         # check the reachability for each index
                         if reachability == h + 1:
                             break_w = 1
@@ -141,7 +130,7 @@ class Algorithm:
                     if tem_timestamp > time_df[n][0]:
                         root = n
                         tem_timestamp = time_df[n][0]
-                        tem_length = len_df[n][0]
+
             if break_f == 1:
                 deleted_subtree = current_subtree_edges
                 break
@@ -149,6 +138,9 @@ class Algorithm:
 
     @staticmethod
     def draw_graph(df, file_path):
+        """
+        Draw temporal graph
+        """
         temporal_graph = Graph(format='jpeg')
         temporal_graph.attr('node', shape='circle')
         nodelist = []
@@ -175,3 +167,23 @@ class Algorithm:
             graph_matrix[df['i'][i]][df['j'][i]] = df['t'][i]
             graph_matrix[df['j'][i]][df['i'][i]] = df['t'][i]
         return graph_matrix
+
+    @staticmethod
+    def delete_edge(etime_df, temporal_graph):
+        """
+        Find deleted edges according to delta approximation
+        """
+        edge_list = []
+        # Count the reachability of each vertex
+        reachability_series = etime_df[etime_df.columns].lt(sys.maxsize).sum(axis=1)
+        reachability_df = reachability_series.to_frame()
+        reachability_df.columns = ['reachability']
+        # Get the vertex where reachability is the minimum value greater than h
+        reachability_df = reachability_df[reachability_df['reachability'] > h]
+        v = reachability_df['reachability'].idxmin()
+        # Get the edge incident to that vertex has the largest time label
+        graph_matrix = Algorithm.temporal_graph_matrix(temporal_graph)
+        u = graph_matrix[graph_matrix.lt(sys.maxsize)][v].idxmax()
+        t = graph_matrix[v][u]
+        edge_list.append((v, u, t))
+        return edge_list
