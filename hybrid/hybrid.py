@@ -36,8 +36,30 @@ reachability_df.columns = ['reachability']
 source_nodes = reachability_df[reachability_df.reachability > h].index.tolist()
 
 # Do delta-delaying
+# Add one extra column delta-possible. This is the upper bound of timestamp allowing any delaying
+graph_df['delta-possible'] = graph_df['t'] + delta - 1
 
+# Define the edge stream
+edge_stream_df = graph_df.sort_values(by='t')
+# Get the nodes name
+nodes_name = list(set(graph_df['i']).union(graph_df['j']))
+nodes_number = len(nodes_name)
 
+t_max = graph_df['t'].max()+delta
+t_min = graph_df['t'].min()
+
+for time in range(t_min, t_max):
+    # Compute the REt(⟨G, T⟩, S, t)
+    ret_list = Algorithm.reachable_edge_t(graph_df, source_nodes, time)
+    for v in ret_list:
+        update_index = graph_df[((graph_df['i'] == v[0]) & (graph_df['j'] == v[1])) |
+                                ((graph_df['j'] == v[0]) & (graph_df['i'] == v[1]))].index
+        if (graph_df['t'][update_index] <= graph_df['delta-possible'][update_index]).bool():
+            t = graph_df['t'][update_index].values[0]
+            graph_df.loc[update_index, 't'] = t+1
+graph_df.drop(columns=['delta-possible'], inplace=True)
+
+# Do delta-approximation
 while reachability > h:
     delete_edge_list = Algorithm.delete_edge(time_df, graph_df)
     deleted_edges.append(delete_edge_list[0])  # add to the deleted edge

@@ -187,3 +187,25 @@ class Algorithm:
         t = graph_matrix[v][u]
         edge_list.append((v, u, t))
         return edge_list
+
+    @staticmethod
+    def reachable_edge_t(df, source, time_label):
+        """
+        Compute the REt(⟨G, T⟩, S, t)
+        """
+        delaying_edge_list = []
+        reachability, time_df = Algorithm.find_reachability(df)
+        time_df = time_df[time_df.index.isin(source)]
+        time_df.drop(axis=1, labels=source, inplace=True)
+        edge_df = Algorithm.temporal_graph_matrix(df)
+        for index, row in time_df.iteritems():
+            if time_df[index].min() == time_label:
+                match_sources = edge_df[edge_df[index] == time_label].index.tolist()
+                for vertex in match_sources:
+                    remove_duplicate_set = set(delaying_edge_list)
+                    item = (vertex, index)
+                    item_reverse = (index, vertex)
+                    if (item not in remove_duplicate_set) and (item_reverse not in remove_duplicate_set):
+                        delaying_edge_list.append((vertex, index))
+
+        return delaying_edge_list

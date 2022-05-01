@@ -34,32 +34,9 @@ nodes_number = len(nodes_name)
 t_max = graph_df['t'].max()+delta
 t_min = graph_df['t'].min()
 
-
-def reachable_edge_t(df, source, time_label):
-    """
-    Compute the REt(⟨G, T⟩, S, t), firstly, find
-    """
-    delaying_edge_list = []
-    reachability, time_df = Algorithm.find_reachability(df)
-    time_df = time_df[time_df.index.isin(source)]
-    time_df.drop(axis=1, labels=source, inplace=True)
-    edge_df = Algorithm.temporal_graph_matrix(df)
-    for index, row in time_df.iteritems():
-        if time_df[index].min() == time_label:
-            match_sources = edge_df[edge_df[index] == time_label].index.tolist()
-            for vertex in match_sources:
-                remove_duplicate_set = set(delaying_edge_list)
-                item = (vertex, index)
-                item_reverse = (index, vertex)
-                if (item not in remove_duplicate_set) and (item_reverse not in remove_duplicate_set):
-                    delaying_edge_list.append((vertex, index))
-
-    return delaying_edge_list
-
-
 for time in range(t_min, t_max):
     # Compute the REt(⟨G, T⟩, S, t)
-    ret_list = reachable_edge_t(graph_df, source_nodes, time)
+    ret_list = Algorithm.reachable_edge_t(graph_df, source_nodes, time)
     for v in ret_list:
         update_index = graph_df[((graph_df['i'] == v[0]) & (graph_df['j'] == v[1])) |
                                 ((graph_df['j'] == v[0]) & (graph_df['i'] == v[1]))].index
