@@ -61,7 +61,7 @@ graph_df.drop(columns=['delta-possible'], inplace=True)
 
 # Do delta-approximation
 while reachability > h:
-    delete_edge_list = Algorithm.delete_edge(time_df, graph_df)
+    delete_edge_list = Algorithm.delete_edge(time_df, graph_df, h)
     deleted_edges.append(delete_edge_list[0])  # add to the deleted edge
     # update the graph edge
     graph_df.drop(graph_df[((graph_df.i == delete_edge_list[0][0]) & (graph_df.j == delete_edge_list[0][1])) |

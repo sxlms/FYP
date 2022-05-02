@@ -169,7 +169,7 @@ class Algorithm:
         return graph_matrix
 
     @staticmethod
-    def delete_edge(etime_df, temporal_graph):
+    def delete_edge(etime_df, temporal_graph, h):
         """
         Find deleted edges according to delta approximation
         """
