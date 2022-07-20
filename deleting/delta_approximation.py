@@ -36,7 +36,7 @@ while reachability > h:
                            ((graph_df.j == delete_edge_list[0][0]) & (graph_df.i == delete_edge_list[0][1]))].index,
                   inplace=True)
     reachability, time_df = Algorithm.find_reachability(graph_df)
-
+dhiuvwhuk
 if len(deleted_edge) > 0:
     deleted_edge_df = pd.DataFrame(data=deleted_edge, columns=['i', 'j', 't'])
     Algorithm.draw_graph(deleted_edge_df, "d_deleted_edges")
